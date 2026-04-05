@@ -1,2 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>COPD Care Companion</title>
+  <meta name="description" content="Privacy-first COPD self-management tool with offline support, peak flow tracking, and breathing exercises.">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0056b3">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1>🫁 COPD Care</h1>
+    <span id="greeting">Welcome, Alex!</span>
+    <button id="themeToggle" aria-label="Toggle theme">🌓</button>
+  </header>
 
-test2
+  <main class="app-content">
+    <!-- HOME TAB -->
+    <section id="home-tab" class="tab active">
+      <button id="emergencyBtn" class="emergency-btn">🚨 Emergency Help <small>Tap if experiencing severe symptoms→</small></button>
+      
+      <div class="card streak-card">
+        <span id="streakDisplay">🔥 3-day streak!</span>
+        <small>Practice daily to improve breath control</small>
+      </div>
+
+      <div class="card">
+        <h2>📝 Today's Assessment</h2>
+        <label>🫁 Dyspnea Score (MRC Scale)
+          <select id="mrcScore">
+            <option value="1">1 - Strenuous exercise only</option>
+            <option value="2">2 - Hurrying or slight hill</option>
+            <option value="3">3 - Walk slower than peers</option>
+            <option value="4">4 - Stop for breath after 100m</option>
+            <option value="5">5 - Too breathless to leave house</option>
+          </select>
+        </label>
+        <label>📊 Symptom Severity (1-5)
+          <input type="range" id="symptomSeverity" min="1" max="5" value="2">
+          <span id="severityVal">2</span>
+        </label>
+        <label>⚠️ Exacerbation Warning Signs
+          <textarea id="warningSigns" placeholder="e.g., increased cough, change in sputum color..."></textarea>
+        </label>
+        <p class="alert-text">🚨 Action Plan: If you have 2+ warning signs, follow your COPD Action Plan or contact your doctor.</p>
+        <button id="saveAssessment" class="primary-btn">✅ Save Today's Assessment</button>
+      </div>
+
+      <div class="card">
+        <h2>📊 Peak Flow Meter</h2>
+        <p>Track your lung function daily (optional)</p>
+        <div class="pf-zones">
+          <span class="zone good">Good</span>
+          <span class="zone caution">Caution</span>
+          <span class="zone low">Low</span>
+        </div>
+        <input type="number" id="peakFlowInput" placeholder="Enter L/min (100-1000)">
+        <button id="pfSubmitBtn" class="secondary-btn">📝 Enter Reading</button>
+        <div id="pfZoneBanner" class="zone-banner" style="display:none;"></div>
+        <div class="btn-row">
+          <button id="viewHistoryBtn" class="secondary-btn" data-tab="log">📈 View History</button>
+        </div>
+      </div>
+
+      <div class="card aqi-card">
+        <h2>🌤️ Air Quality & COPD</h2>
+        <div id="aqiDisplay">🟢 AQI: 42 - Good</div>
+        <p id="aqiMsg">Great day for outdoor activities! Air quality is favorable for COPD management.</p>
+        <div class="aqi-details">
+          <span>72°F Temperature</span>
+          <span>45% Humidity</span>
+          <span>Low 🌿 Pollen</span>
+          <span>Good ✅ Ozone</span>
+        </div>
+        <div class="recommendation">
+          <p>✅ Recommendation: Safe for outdoor exercise. Consider morning walks when air is coolest.</p>
+          <p class="warning">⚠️ When AQI > 100: Limit outdoor time, keep windows closed, use air purifier indoors.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEDS TAB -->
+    <section id="meds-tab" class="tab">
+      <div class="card">
+        <h2>💊 Your Medication Plan</h2>
+        <div class="med-schedule">
+          <h3>💊 Medications</h3>
+          <h3>🌬️ Inhaler Guide</h3>
+          <h3>🌤️ Air Quality</h3>
+        </div>
+        <div class="med-schedule">
+          <h3>🌅 Morning</h3>
+          <ul><li>Symbicort (Maintenance)</li><li>Vitamin D3</li></ul>
+          <h3>🌙 Evening</h3>
+          <ul><li>Montelukast</li><li>Albuterol (PRN)</li></ul>
+        </div>
+        <p class="tip">💡 Pro Tip: Rinse your mouth after using steroid inhalers to prevent thrush.</p>
+      </div>
+
+      <div class="card">
+        <h2>🔄 Refill Reminders</h2>
+        <div class="btn-row">
+          <button class="secondary-btn">✏️ Edit Medications</button>
+          <button class="secondary-btn">🔔 Set Reminders</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>🌬️ Proper Inhaler Technique</h2>
+        <details open>
+          <summary>For MDI (Metered Dose Inhaler):</summary>
+          <ol>
+            <li>Remove cap and shake inhaler well (5 seconds)</li>
+            <li>Breathe out fully, away from inhaler</li>
+            <li>Place mouthpiece between teeth, seal lips tightly</li>
+            <li>Start breathing in SLOWLY, then press canister</li>
+            <li>Continue inhaling deeply (3-5 seconds)</li>
+            <li>Hold breath for 10 seconds, then exhale slowly</li>
+            <li>Wait 1 minute between puffs if taking multiple</li>
+          </ol>
+        </details>
+        <details>
+          <summary>For Dry Powder Inhaler (HandiHaler):</summary>
+          <ol>
+            <li>Open blister pack, place capsule in chamber</li>
+            <li>Pierce capsule by pressing buttons firmly</li>
+            <li>Breathe out fully (away from device)</li>
+            <li>Seal lips around mouthpiece, inhale DEEPLY and STEADILY</li>
+            <li>Hold breath 10 seconds, exhale slowly</li>
+            <li>Check capsule is empty; repeat if needed</li>
+          </ol>
+        </details>
+        <p class="warning">⚠️ Common Mistakes: Not shaking MDI, inhaling too fast, not holding breath, not using spacer if prescribed.</p>
+      </div>
+    </section>
+
+    <!-- BREATHE TAB -->
+    <section id="breathe-tab" class="tab">
+      <div class="card">
+        <h2>🧘 Breathing Exercises</h2>
+        <p>Practice daily to improve breath control and reduce anxiety</p>
+        <div class="breath-selector">
+          <button class="breath-btn active" data-type="pursed">Pursed-Lip (4-4)</button>
+          <button class="breath-btn" data-type="box">Box (4-4-4-4)</button>
+          <button class="breath-btn" data-type="478">4-7-8 Relaxation</button>
+          <button class="breath-btn" data-type="diaphragmatic">Diaphragmatic (5-5)</button>
+        </div>
+        <div id="breathDisplay" class="breath-display">Ready<br><small>Tap Start to begin</small></div>
+        <p id="breathTimer" class="timer">00:00</p>
+        <div class="btn-row">
+          <button id="breathStart" class="primary-btn">▶️ Start</button>
+          <button id="breathStop" class="danger-btn" disabled>⏹️ Stop</button>
+          <button id="breathMute" class="icon-btn">🔇 Audio</button>
+        </div>
+      </div>
+      <div class="card tips-card">
+        <h3>💡 Tips for Better Breathing</h3>
+        <ul>
+          <li>Practice pursed-lip breathing during activities that cause shortness of breath</li>
+          <li>Sit upright with shoulders relaxed for best results</li>
+          <li>Start with 5 minutes daily and gradually increase</li>
+          <li>Use breathing exercises before stressful situations</li>
+          <li>Combine with gentle movement like walking</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- LOG TAB -->
+    <section id="log-tab" class="tab">
+      <div class="card">
+        <h2>📋 Your Health History</h2>
+        <div class="filter-btns">
+          <button class="filter active" data-filter="all">All</button>
+          <button class="filter" data-filter="flare">⚠️ Flare-ups</button>
+          <button class="filter" data-filter="peak">📊 Peak Flow</button>
+        </div>
+        <div id="historyList" class="history-list">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+      <div class="card">
+        <h2>📤 Export & Backup</h2>
+        <p>Keep your health data safe and share with your care team.</p>
+        <div class="btn-row">
+          <button id="exportPDF" class="secondary-btn">📤 Export PDF</button>
+          <button id="exportJSON" class="secondary-btn">💾 Backup Data</button>
+        </div>
+        <p class="small-text">🔒 All data is stored locally on your device. Export creates a shareable summary.</p>
+      </div>
+    </section>
+
+    <!-- PROFILE TAB -->
+    <section id="profile-tab" class="tab">
+      <div class="card">
+        <h2>👤 User Profile</h2>
+        <div class="profile-field"><label>Full Name</label><span id="profName">Alex Johnson</span><button class="edit-btn">✏️</button></div>
+        <div class="profile-field"><label>Date of Birth</label><span id="profDOB">March 15, 1958</span><button class="edit-btn">✏️</button></div>
+        <div class="profile-field"><label>COPD Diagnosis</label><span id="profStage">Moderate COPD (GOLD Stage 2)</span><button class="edit-btn">✏️</button></div>
+        <div class="profile-field"><label>Baseline Peak Flow</label><span id="profBaseline">450 L/min</span><button class="edit-btn">✏️</button></div>
+      </div>
+      <div class="card">
+        <h2>👩‍⚕️ Primary Care Provider</h2>
+        <div class="profile-field"><label>Doctor Name</label><span id="provName">Dr. Sarah Johnson, MD</span><button class="edit-btn">✏️</button></div>
+        <div class="profile-field"><label>Clinic/Hospital</label><span id="provClinic">City Medical Center</span><button class="edit-btn">✏️</button></div>
+        <div class="profile-field"><label>Phone</label><a href="tel:+15551234567">(555) 123-4567</a><button class="edit-btn">✏️</button></div>
+      </div>
+      <div class="card">
+        <h2>Next Appointment</h2>
+        <span id="nextAppt">April 28, 2026 at 2:30 PM</span>
+        <button class="edit-btn">✏️</button>
+      </div>
+      <div class="card">
+        <h2>🚨 Emergency Contacts</h2>
+        <div class="profile-field"><label>Emergency Services</label><a href="tel:911">911</a><button class="edit-btn">✏️</button></div>
+        <div class="profile-field"><label>Family Contact</label><a href="tel:+15559876543">Maria Johnson (555) 987-6543</a><button class="edit-btn">✏️</button></div>
+        <div class="profile-field"><label>Pharmacy</label><a href="tel:+15552468135">City Pharmacy (555) 246-8135</a><button class="edit-btn">✏️</button></div>
+      </div>
+      <div class="card">
+        <h2>⚙️ App Settings</h2>
+        <div class="profile-field"><label>Reminder Time</label><span>8:00 AM & 8:00 PM</span><button class="edit-btn">✏️</button></div>
+        <div class="profile-field"><label>Units</label><span>Imperial (°F, lbs)</span><button class="edit-btn">✏️</button></div>
+        <div class="btn-row">
+          <button id="showDisclaimer" class="secondary-btn">📋 Disclaimer</button>
+          <button id="showPrivacy" class="secondary-btn">🔒 Privacy Policy</button>
+          <button id="resetDemo" class="danger-btn">🔄 Reset Demo Data</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active" data-tab="home">🏠 Home</a>
+    <a href="#" class="nav-item" data-tab="meds">💊 Meds</a>
+    <a href="#" class="nav-item" data-tab="breathe">🧘 Breathe</a>
+    <a href="#" class="nav-item" data-tab="log">📋 Log</a>
+    <a href="#" class="nav-item" data-tab="profile">👤 Profile</a>
+  </nav>
+
+  <!-- MODALS -->
+  <dialog id="emergencyModal" class="modal">
+    <div class="modal-content danger-theme">
+      <h2>🚨 Emergency Help</h2>
+      <button class="close-modal" data-modal="emergencyModal">✕</button>
+      <p>If you're experiencing severe symptoms:</p>
+      <ul>
+        <li>📞 Call 911 or your local emergency number</li>
+        <li>🏥 Go to nearest emergency room</li>
+        <li>💊 Use rescue inhaler as prescribed</li>
+        <li>👥 Have someone stay with you</li>
+      </ul>
+      <p><strong>Seek immediate care if:</strong> Severe shortness of breath at rest, Blue/gray lips or fingernails, Chest pain or pressure, Confusion, dizziness, or fainting, Rapid heartbeat with breathlessness.</p>
+      <div class="contact-list">
+        <p>📋 Emergency Contacts:</p>
+        <p>👩‍⚕️ Dr. Sarah Johnson: <a href="tel:+15551234567">(555) 123-4567</a></p>
+        <p>🚑 Emergency: <a href="tel:911">911</a></p>
+        <p>👨‍👩‍👧 Maria Johnson: <a href="tel:+15559876543">(555) 987-6543</a></p>
+      </div>
+      <button id="closeEmergencySafe" class="secondary-btn">I'm Okay, Close</button>
+      <a href="tel:911" class="danger-btn large">📞 CALL 911 NOW</a>
+      <small class="modal-footer">ℹ️ This app cannot replace emergency services. When in doubt, always seek professional medical help.</small>
+    </div>
+  </dialog>
+
+  <dialog id="disclaimerModal" class="modal">
+    <div class="modal-content">
+      <h2>📋 Medical Disclaimer</h2>
+      <button class="close-modal" data-modal="disclaimerModal">✕</button>
+      <p><strong>Not Medical Advice:</strong> The suggestions provided by this application are for informational purposes only and should not be considered medical advice, diagnosis, or treatment recommendations. Always consult with qualified healthcare professionals regarding any medical questions or concerns.</p>
+      <p><strong>Emergency Situations:</strong> In case of a medical emergency, always call 911 or your local emergency services immediately. This app is not designed to handle emergency situations and should never be used as a substitute for professional emergency response.</p>
+      <p><strong>AI-Generated Content:</strong> Some responses are generated using artificial intelligence. While we strive for accuracy, AI-generated content may contain errors or may not be appropriate for every situation. Always use your best judgment and professional guidance.</p>
+      <p><strong>Research Purpose:</strong> This prototype is being developed as part of health technology research and is intended for educational and demonstration purposes only.</p>
+      <button id="closeDisclaimer" class="primary-btn">I Understand</button>
+    </div>
+  </dialog>
+
+  <dialog id="privacyModal" class="modal">
+    <div class="modal-content">
+      <h2>🔒 Privacy Policy</h2>
+      <button class="close-modal" data-modal="privacyModal">✕</button>
+      <p><strong>Your Privacy Matters:</strong> We are committed to protecting your privacy and ensuring the security of any information you share with COPD Care Companion.</p>
+      <p><strong>Data Collection:</strong> We collect health data you enter for tracking purposes, usage patterns to improve the application. No personal identifying information is required or stored on our servers.</p>
+      <p><strong>Data Security:</strong> All data is stored locally on your device. Exported data is encrypted if shared. We do not sell or share data with third parties.</p>
+      <p><strong>Local Storage:</strong> Your health information, medications, and settings are stored only on your device using browser local storage. Clearing your browser data will remove this information.</p>
+      <p><strong>Community Features:</strong> If you choose to share anonymized data for research purposes, all personal identifiers are removed. You can opt out at any time in Settings.</p>
+      <p><strong>Contact Us:</strong> If you have questions about our privacy practices, please contact our support team through the app settings.</p>
+      <button id="closePrivacy" class="primary-btn">Got it</button>
+    </div>
+  </dialog>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
