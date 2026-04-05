@@ -292,7 +292,34 @@
       <button id="closePrivacy" class="primary-btn">Got it</button>
     </div>
   </dialog>
+<script>
+  const modal = document.getElementById("privacyModal");
+  const closeBtn = document.getElementById("closePrivacy");
 
+  // Check if user has already seen the modal
+  const hasSeenPrivacy = localStorage.getItem("privacySeen");
+
+  // If NOT seen → open modal
+  if (!hasSeenPrivacy) {
+    window.addEventListener("load", () => {
+      modal.showModal();
+    });
+  }
+
+  // When user clicks "Got it"
+  closeBtn.addEventListener("click", () => {
+    modal.close();
+    localStorage.setItem("privacySeen", "true");
+  });
+
+  // Also handle X button
+  document.querySelectorAll(".close-modal").forEach(btn => {
+    btn.addEventListener("click", () => {
+      modal.close();
+      localStorage.setItem("privacySeen", "true");
+    });
+  });
+</script>
   <script src="app.js" defer></script>
 </body>
 </html>
