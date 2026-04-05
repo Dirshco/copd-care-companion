@@ -1,0 +1,16 @@
+<pre>
+🚀 Deployment Steps (Exact)
+Create folder copd-care-companion/
+Save each block above into its respective file
+Add icons/icon-192x192.png and icon-512x512.png
+Test Locally: npx serve . → open in Chrome
+Deploy to GitHub:
+bash
+123
+→ Settings → Pages → main → / → Save
+
+<hr>
+git init && git add . && git commit -m "initial"
+git remote add origin https://github.com/YOU/repo.git
+git push -u origin main
+</pre>
