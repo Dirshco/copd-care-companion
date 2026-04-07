@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta name="description" content="COPD Care Companion - Personalized health management for COPD patients">
+  <meta name="theme-color" content="#2563eb">
+  <title>COPD Care Companion | Breathe Better</title>
+  
+  <!-- External Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #0ea5e9;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --danger-dark: #dc2626;
+      --light: #f8fafc;
+      --dark: #1e293b;
+      --gray: #64748b;
+      --gray-light: #e2e8f0;
+      --card-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
+      --border-radius: 24px;
+      --bottom-nav-height: 70px;
+      --safe-area-bottom: env(safe-area-inset-bottom);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(145deg, #f0f9ff 0%, #e6f0fa 100%);
+      color: var(--dark);
+      line-height: 1.5;
+      padding-bottom: calc(var(--bottom-nav-height) + var(--safe-area-bottom));
+      -webkit-tap-highlight-color: transparent;
+    }
+    header {
+      background: linear-gradient(105deg, var(--primary) 0%, #1e40af 100%);
+      color: white;
+      padding: 18px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      backdrop-filter: blur(0px);
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; font-size: 1.35rem; font-weight: 700; letter-spacing: -0.3px; }
+    .logo-icon { font-size: 1.9rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+    .user-greeting { font-size: 0.9rem; background: rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 40px; backdrop-filter: blur(4px); }
+    main { max-width: 600px; margin: 0 auto; padding: 18px 16px 30px; }
+    .page { display: none; animation: fadeSlide 0.3s ease; }
+    .page.active { display: block; }
+    @keyframes fadeSlide { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .card {
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(0px);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(255,255,255,0.5);
+      transition: transform 0.1s ease;
+    }
+    .card-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; color: var(--primary); border-left: 4px solid var(--primary); padding-left: 12px; }
+    .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .action-btn {
+      background: white; border: none; border-radius: 20px; padding: 14px 6px; text-align: center;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.05); cursor: pointer; transition: all 0.2s;
+      display: flex; flex-direction: column; align-items: center; gap: 6px; font-weight: 500;
+    }
+    .action-btn:active { transform: scale(0.96); background: #f1f5f9; }
+    .action-btn .icon { font-size: 1.8rem; }
+    .breathing-circle {
+      width: 180px; height: 180px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      margin: 15px auto; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;
+      transition: transform 3s ease-in-out; box-shadow: 0 15px 35px -10px rgba(37,99,235,0.4);
+    }
+    .breathing-circle.inhale { transform: scale(1.12); background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+    .breathing-circle.exhale { transform: scale(0.92); background: linear-gradient(135deg, #2563eb, #0284c7); }
+    .btn { padding: 10px 18px; border: none; border-radius: 60px; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+    .btn-primary { background: var(--primary); color: white; box-shadow: 0 2px 6px rgba(37,99,235,0.3); }
+    .btn-secondary { background: #eef2ff; color: var(--primary-dark); }
+    .emergency-banner {
+      background: linear-gradient(115deg, #dc2626, #b91c1c); color: white; padding: 16px 20px; border-radius: 28px;
+      margin-bottom: 20px; display: flex; align-items: center; gap: 14px; cursor: pointer; animation: softPulse 2s infinite;
+    }
+    @keyframes softPulse { 0% { box-shadow: 0 0 0 0 rgba(220,38,38,0.5); } 70% { box-shadow: 0 0 0 12px rgba(220,38,38,0); } 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); } }
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--bottom-nav-height) + var(--safe-area-bottom));
+      background: rgba(255,255,255,0.96); backdrop-filter: blur(10px); display: flex; justify-content: space-around;
+      padding-top: 8px; padding-bottom: var(--safe-area-bottom); box-shadow: 0 -4px 20px rgba(0,0,0,0.08); z-index: 1000;
+      max-width: 600px; margin: 0 auto; left: 50%; transform: translateX(-50%); width: 100%; border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; background: none; border: none; color: var(--gray); cursor: pointer; font-size: 0.7rem; font-weight: 500; flex: 1; }
+    .nav-item.active { color: var(--primary); transform: translateY(-2px); }
+    .nav-icon { font-size: 1.6rem; }
+    .med-item { background: var(--light); border-radius: 18px; padding: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--secondary); }
+    .modal-overlay { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; backdrop-filter: blur(3px); }
+    .modal-overlay.active { display: flex; }
+    .modal { background: white; border-radius: 32px; max-width: 500px; width: 100%; max-height: 85vh; overflow-y: auto; box-shadow: 0 30px 50px rgba(0,0,0,0.3); }
+    .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 24px; border-radius: 60px; z-index: 3000; animation: fadeUp 0.3s; font-weight: 500; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    .editable-field { display: flex; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid #eef2ff; }
+    .field-label { flex: 1; font-weight: 600; color: var(--gray); }
+    .field-value { flex: 2; text-align: right; font-weight: 500; word-break: break-word; }
+    .instruction-step { background: #f8fafc; border-radius: 20px; padding: 14px; margin-bottom: 12px; display: flex; gap: 12px; align-items: center; }
+    @media (max-width: 480px) { .quick-actions { grid-template-columns: repeat(2, 1fr); } .breathing-circle { width: 150px; height: 150px; } }
+  </style>
+</head>
+<body>
+<header><div class="header-content"><div class="logo"><span class="logo-icon">🫁</span><span>COPD Care</span></div><div class="user-greeting" id="userGreeting">Welcome!</div></div></header>
+<main>
+  <section id="page-home" class="page active">
+    <div class="emergency-banner" onclick="showEmergencyModal()"><span class="icon">🚨</span><div class="text"><strong>Emergency Help</strong><small>Severe symptoms? Tap here</small></div><span>→</span></div>
+    <div class="quick-actions">
+      <button class="action-btn medications" onclick="navigateTo('medications')"><span class="icon">💊</span><span>Meds</span></button>
+      <button class="action-btn inhaler" onclick="navigateTo('breathing')"><span class="icon">🌬️</span><span>Breathe</span></button>
+      <button class="action-btn air" onclick="showAirQuality()"><span class="icon">🌤️</span><span>Air Quality</span></button>
+      <button class="action-btn log" onclick="navigateTo('log')"><span class="icon">📋</span><span>Log</span></button>
+    </div>
+    <div class="card"><div class="card-title">🧘 Breathing Exercise</div><div class="breathing-container"><div class="breathing-circle" id="breathCircle">Ready</div><div class="breathing-controls"><button class="btn btn-primary" id="startBreath" onclick="startBreathing()">▶️ Start</button><button class="btn btn-secondary" id="stopBreath" onclick="stopBreathing()" disabled>⏹️ Stop</button></div><p style="margin-top:12px; font-size:0.85rem; color:var(--gray);">💡 Pursed-lip: inhale 4s, exhale 4s</p></div></div>
+    <div class="card"><div class="card-title">📝 Today's Assessment</div><div class="streak-badge" style="background:#fef3c7; display:inline-block; margin-bottom:15px;">🔥 <span id="streakCount">3</span> day streak</div>
+      <div style="margin-bottom:20px;"><strong>🫁 Dyspnea (MRC)</strong><div id="mrcScale"></div></div>
+      <div><strong>📊 Symptoms (1-5)</strong><div id="symptomSliders"></div></div>
+      <div><strong>⚠️ Warning Signs</strong><div id="warningSigns"></div><p style="font-size:0.8rem; margin-top:8px; color:var(--danger);">🚨 2+ signs → contact doctor</p></div>
+      <button class="btn btn-primary" style="width:100%; margin-top:15px;" onclick="saveAssessment()">✅ Save Today</button></div>
+    <div class="card"><div class="card-title">📊 Peak Flow Trend</div><div class="peak-flow-chart" id="peakFlowChart" style="height:100px; display:flex; gap:4px; align-items:flex-end;"></div><div class="action-row"><button class="btn btn-secondary" onclick="enterPeakFlow()">➕ Record Reading</button><button class="btn btn-primary" onclick="navigateTo('log')">History</button></div></div>
+  </section>
+  <section id="page-medications" class="page"><div class="card"><div class="card-title">💊 Medication Plan</div><div><strong>🌅 Morning</strong><div id="morningMeds"></div></div><div style="margin-top:15px;"><strong>🌙 Evening</strong><div id="eveningMeds"></div></div><button class="btn btn-secondary" style="margin-top:15px;" onclick="editMedications()">✏️ Edit Medications</button></div><div class="card"><div class="card-title">🔄 Refill Alerts</div><div id="refillReminders"></div></div><div class="card"><div class="card-title">🌬️ Inhaler Technique</div><p>✅ MDI: Shake 5s, breathe out, inhale slowly & press, hold 10s.<br>✅ DPI: Breathe out, seal lips, inhale DEEPLY, hold breath.</p></div></section>
+  <section id="page-breathing" class="page"><div class="card"><div class="card-title">🧘 Guided Breathing</div><div class="breathing-circle" id="breathCircleFull">Ready</div><p id="breathInstruction">Pursed-lip: Inhale 4s / Exhale 4s</p><div class="breathing-controls"><button class="btn btn-primary" onclick="startBreathingFull()">▶️ Start</button><button class="btn btn-secondary" onclick="stopBreathingFull()" disabled id="stopBreathFull">⏹️ Stop</button></div><div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;"><button class="btn btn-secondary" onclick="selectBreathing('pursed')">Pursed Lip</button><button class="btn btn-secondary" onclick="selectBreathing('box')">Box (4-4-4-4)</button><button class="btn btn-secondary" onclick="selectBreathing('relax')">4-7-8 Relax</button></div></div></section>
+  <section id="page-log" class="page"><div class="card"><div class="card-title">📋 Health History</div><div id="healthHistoryList"></div><div class="action-row"><button class="btn btn-secondary" onclick="exportData()">📤 Export PDF</button><button class="btn btn-secondary" onclick="backupData()">💾 Backup</button></div></div></section>
+  <section id="page-profile" class="page"><div class="card"><div class="card-title">👤 Profile</div><div id="profileFieldsContainer"></div><button class="btn btn-secondary" onclick="showInstructionsModal()">📖 Show User Guide Again</button><button class="btn btn-secondary" style="margin-top:10px;" onclick="resetApp()">🔄 Reset Demo Data</button></div></section>
+</main>
+<nav class="bottom-nav"><button class="nav-item active" data-page="home" onclick="navigateTo('home')"><span class="nav-icon">🏠</span><span>Home</span></button><button class="nav-item" data-page="medications" onclick="navigateTo('medications')"><span class="nav-icon">💊</span><span>Meds</span></button><button class="nav-item" data-page="breathing" onclick="navigateTo('breathing')"><span class="nav-icon">🧘</span><span>Breathe</span></button><button class="nav-item" data-page="log" onclick="navigateTo('log')"><span class="nav-icon">📋</span><span>Log</span></button><button class="nav-item" data-page="profile" onclick="navigateTo('profile')"><span class="nav-icon">👤</span><span>Profile</span></button></nav>
+<div id="modalContainer"></div>
+<script>
+  // ==================== ENHANCED MOCK DATA (Fully Editable) ====================
+  const DEFAULT_DATA = {
+    user: { name: "Eleanor Chen", dob: "May 12, 1954", diagnosis: "COPD GOLD Stage 2 (Moderate)", baselinePeakFlow: "380 L/min" },
+    pcp: { name: "Dr. Marcus Rivera, Pulmonologist", clinic: "Lung Health Institute", phone: "(415) 555-1234", nextAppt: "June 10, 2026 at 10:15 AM" },
+    emergency: { contact: "James Chen (Son) - (415) 555-9876", pharmacy: "Wellness Pharmacy - (415) 555-4321" },
+    medications: { morning: [{ name: "Spiriva Respimat", dose: "2 puffs (2.5 mcg)", type: "maintenance", taken: false }], evening: [{ name: "Symbicort", dose: "2 puffs", type: "maintenance", taken: false }], rescue: [{ name: "Albuterol HFA", dose: "2 puffs as needed", type: "rescue", taken: false }], refills: [{ name: "Spiriva", daysLeft: 12 }, { name: "Symbicort", daysLeft: 8 }] },
+    settings: { reminderTime: "9:00 AM & 9:00 PM", units: "Metric (L/min)" },
+    healthHistory: [
+      { date: "2026-04-04", mrc: 2, peakFlow: 355, symptoms: "Mild wheeze after walk", warnings: [] },
+      { date: "2026-04-03", mrc: 1, peakFlow: 372, symptoms: "Good energy", warnings: [] },
+      { date: "2026-04-02", mrc: 2, peakFlow: 340, symptoms: "Increased cough", warnings: ["Increased shortness of breath"] }
+    ]
+  };
+  let appData = null;
+  let breathingInterval = null, isBreathing = false;
+  
+  function loadData() { const saved = localStorage.getItem('copdCareEnhanced'); appData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_DATA)); }
+  function saveData() { localStorage.setItem('copdCareEnhanced', JSON.stringify(appData)); }
+  function showToast(msg, type='success') { const t=document.createElement('div'); t.className='toast'; t.innerText=msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2800); }
+  
+  function renderAll() { renderUserGreeting(); renderHomeAssessment(); renderMedications(); renderPeakFlowChart(); renderHealthHistory(); renderProfileFields(); }
+  function navigateTo(pageId) { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(`page-${pageId}`).classList.add('active'); document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active')); document.querySelector(`.nav-item[data-page="${pageId}"]`)?.classList.add('active'); window.scrollTo({top:0}); if(pageId==='medications') renderMedications(); if(pageId==='log') renderHealthHistory(); }
+  
+  function renderUserGreeting() { const name = appData.user.name.split(' ')[0]; document.getElementById('userGreeting').innerText = `Hello, ${name} 🌿`; }
+  function renderHomeAssessment() {
+    const mrcOpts = [{v:0,l:"No breathlessness"},{v:1,l:"SOB hurrying"},{v:2,l:"Walks slower"},{v:3,l:"Stops after 100yd"},{v:4,l:"Too breathless to leave house"}];
+    document.getElementById('mrcScale').innerHTML = mrcOpts.map(o=>`<label class="mrc-option" style="display:flex; gap:10px; padding:8px; border-radius:16px; background:#f8fafc; margin-bottom:8px;"><input type="radio" name="mrc" value="${o.v}"><div><strong>${o.v} - ${o.l}</strong></div></label>`).join('');
+    const symHtml = `<div class="symptom-row"><span>Shortness of breath</span><input type="range" min="1" max="5" value="2" id="sob" oninput="updateVal('sob')"><span id="sob-val">2</span></div>
+    <div class="symptom-row"><span>Cough</span><input type="range" min="1" max="5" value="2" id="cough" oninput="updateVal('cough')"><span id="cough-val">2</span></div>
+    <div class="symptom-row"><span>Fatigue</span><input type="range" min="1" max="5" value="2" id="energy" oninput="updateVal('energy')"><span id="energy-val">2</span></div>`;
+    document.getElementById('symptomSliders').innerHTML = symHtml;
+    document.getElementById('warningSigns').innerHTML = ["Increased SOB","Change in sputum","Fever","Chest tightness"].map(w=>`<label><input type="checkbox" name="warning" value="${w}"> ${w}</label><br>`).join('');
+  }
+  window.updateVal = (id) => { const v = document.getElementById(id).value; document.getElementById(`${id}-val`).innerText = v; };
+  
+  function saveAssessment() {
+    const mrcRad = document.querySelector('input[name="mrc"]:checked');
+    if(!mrcRad) return showToast('Select MRC score','error');
+    const assessment = { date: new Date().toISOString().split('T')[0], mrc: parseInt(mrcRad.value), symptoms: `SOB:${document.getElementById('sob').value}, Cough:${document.getElementById('cough').value}, Fatigue:${document.getElementById('energy').value}`, warnings: Array.from(document.querySelectorAll('input[name="warning"]:checked')).map(c=>c.value) };
+    appData.healthHistory.unshift(assessment);
+    if(appData.healthHistory.length > 30) appData.healthHistory.pop();
+    saveData(); renderHealthHistory(); showToast('✅ Assessment saved!');
+    let streak = parseInt(document.getElementById('streakCount').innerText) + 1;
+    document.getElementById('streakCount').innerText = Math.min(streak,99);
+  }
+  function renderMedications() {
+    const morningHtml = appData.medications.morning.map(m=>`<div class="med-item"><div><strong>${m.name}</strong><br><small>${m.dose}</small></div><button class="btn btn-secondary" onclick="toggleMedTaken('morning','${m.name}')">${m.taken?'✅ Taken':'Mark'}</button></div>`).join('');
+    const eveningHtml = appData.medications.evening.map(m=>`<div class="med-item"><div><strong>${m.name}</strong><br><small>${m.dose}</small></div><button class="btn btn-secondary" onclick="toggleMedTaken('evening','${m.name}')">${m.taken?'✅ Taken':'Mark'}</button></div>`).join('');
+    document.getElementById('morningMeds').innerHTML = morningHtml || '<p>No morning meds</p>';
+    document.getElementById('eveningMeds').innerHTML = eveningHtml || '<p>No evening meds</p>';
+    const refillHtml = appData.medications.refills.map(r=>`<div class="med-item"><span>💊 ${r.name}</span><span style="color:${r.daysLeft<7?'red':'orange'}">${r.daysLeft} days left</span><button class="btn btn-secondary" onclick="markRefilled('${r.name}')">Refill</button></div>`).join('');
+    document.getElementById('refillReminders').innerHTML = refillHtml || '<p>All set!</p>';
+  }
+  window.toggleMedTaken = (time, name) => { const med = appData.medications[time].find(m=>m.name===name); if(med) { med.taken = !med.taken; saveData(); renderMedications(); showToast(`${med.name} ${med.taken?'recorded':'unmarked'}`); } };
+  window.markRefilled = (name) => { const ref = appData.medications.refills.find(r=>r.name===name); if(ref){ ref.daysLeft=30; saveData(); renderMedications(); showToast(`✅ ${name} refill reset`); } };
+  
+  function renderPeakFlowChart() { const baseline = parseInt(appData.user.baselinePeakFlow) || 380; const recent = appData.healthHistory.slice(0,7).map(h=>h.peakFlow||baseline-10); const chartDiv = document.getElementById('peakFlowChart'); chartDiv.innerHTML = recent.map(v=>{ const h = Math.min(90, (v/baseline)*85); return `<div style="flex:1; background:${v>baseline*0.8?'#22c55e':v>baseline*0.6?'#f59e0b':'#ef4444'}; height:${h}%; border-radius:8px 8px 0 0;"></div>`}).join(''); }
+  function renderHealthHistory() { const list = appData.healthHistory.slice(0,10).map(h=>`<div style="background:#f1f5f9; border-radius:18px; padding:12px; margin-bottom:10px;"><strong>📅 ${h.date}</strong> | MRC: ${h.mrc??'?'} | Peak: ${h.peakFlow||'—'} L/min<br>${h.symptoms} ${h.warnings?.length?`⚠️ ${h.warnings.join(',')}`:''}</div>`).join(''); document.getElementById('healthHistoryList').innerHTML = list || '<p>No logs yet</p>'; }
+  function renderProfileFields() {
+    const fields = [
+      {label:"Full Name", id:"userName", val:appData.user.name},{label:"DOB", id:"userDob", val:appData.user.dob},{label:"Diagnosis", id:"userDiagnosis", val:appData.user.diagnosis},{label:"Baseline Peak Flow", id:"userPeakFlow", val:appData.user.baselinePeakFlow},
+      {label:"Doctor", id:"pcpName", val:appData.pcp.name},{label:"Clinic", id:"pcpClinic", val:appData.pcp.clinic},{label:"Doctor Phone", id:"pcpPhone", val:appData.pcp.phone},{label:"Next Appt", id:"pcpAppt", val:appData.pcp.nextAppt},
+      {label:"Emergency Contact", id:"emergencyContact", val:appData.emergency.contact},{label:"Pharmacy", id:"pharmacy", val:appData.emergency.pharmacy}
+    ];
+    const html = fields.map(f=>`<div class="editable-field"><span class="field-label">${f.label}</span><span class="field-value" id="${f.id}">${f.val}</span><button class="edit-btn" onclick="editField('${f.id}')">✏️</button></div>`).join('');
+    document.getElementById('profileFieldsContainer').innerHTML = html;
+    // restore phone links
+    fields.forEach(f=>{ if(f.id.includes('Phone')||f.id==='emergencyContact'||f.id==='pharmacy') { const el=document.getElementById(f.id); if(el && f.val) el.innerHTML = `<a href="tel:${f.val.replace(/\D/g,'')}" style="color:var(--primary);">${f.val}</a>`; } });
+  }
+  window.editField = (fieldId) => { const span = document.getElementById(fieldId); const old = span.innerText; const input = document.createElement('input'); input.value = old; input.className = 'field-input'; input.style = 'padding:6px; border-radius:12px; border:1px solid #ccc; width:100%;'; span.innerHTML = ''; span.appendChild(input); input.focus(); const save = () => { let newVal = input.value.trim(); if(newVal) { span.innerHTML = newVal; updateDataField(fieldId, newVal); } else span.innerHTML = old; }; input.addEventListener('blur', save); input.addEventListener('keypress', e=>{ if(e.key==='Enter') save(); }); };
+  function updateDataField(id, val) {
+    const map = { userName:'user', userDob:'user', userDiagnosis:'user', userPeakFlow:'user', pcpName:'pcp', pcpClinic:'pcp', pcpPhone:'pcp', pcpAppt:'pcp', emergencyContact:'emergency', pharmacy:'emergency' };
+    const section = map[id];
+    if(section==='user') { if(id==='userName') appData.user.name = val; else if(id==='userDob') appData.user.dob = val; else if(id==='userDiagnosis') appData.user.diagnosis = val; else if(id==='userPeakFlow') appData.user.baselinePeakFlow = val; }
+    else if(section==='pcp') { if(id==='pcpName') appData.pcp.name = val; else if(id==='pcpClinic') appData.pcp.clinic = val; else if(id==='pcpPhone') appData.pcp.phone = val; else if(id==='pcpAppt') appData.pcp.nextAppt = val; }
+    else if(section==='emergency') { if(id==='emergencyContact') appData.emergency.contact = val; else if(id==='pharmacy') appData.emergency.pharmacy = val; }
+    saveData(); renderProfileFields(); renderUserGreeting(); showToast('Saved');
+  }
+  window.enterPeakFlow = () => { let val = prompt('Enter today\'s Peak Flow (L/min):'); if(val && !isNaN(val)) { const today = new Date().toISOString().split('T')[0]; const existing = appData.healthHistory.find(h=>h.date===today); if(existing) existing.peakFlow = parseInt(val); else appData.healthHistory.unshift({date:today, peakFlow:parseInt(val), mrc:null, symptoms:'', warnings:[]}); saveData(); renderPeakFlowChart(); renderHealthHistory(); showToast(`Peak flow ${val} recorded`); } };
+  function editMedications() { const modal = createModal('✏️ Manage Meds', `<div><input id="newMedName" placeholder="Med name" style="padding:8px; width:100%; margin-bottom:8px;"><input id="newMedDose" placeholder="Dose" style="padding:8px; width:100%;"><select id="medTimeSelect"><option value="morning">Morning</option><option value="evening">Evening</option></select><button class="btn btn-primary" onclick="addCustomMed()">➕ Add</button></div><hr><div id="customMedList"></div>`); document.getElementById('modalContainer').appendChild(modal); renderCustomMedList(); }
+  window.addCustomMed = () => { const name = document.getElementById('newMedName')?.value; const dose = document.getElementById('newMedDose')?.value; const time = document.getElementById('medTimeSelect')?.value; if(name && dose) { appData.medications[time].push({name, dose, type:'maintenance', taken:false}); saveData(); renderMedications(); renderCustomMedList(); showToast(`➕ ${name} added`); } };
+  function renderCustomMedList() { const all = [...appData.medications.morning, ...appData.medications.evening]; const container = document.getElementById('customMedList'); if(container) container.innerHTML = all.map(m=>`<div style="display:flex; justify-content:space-between;">${m.name} - ${m.dose}<button class="btn btn-secondary" onclick="removeMedItem('${m.name}')">❌</button></div>`).join(''); }
+  window.removeMedItem = (name) => { appData.medications.morning = appData.medications.morning.filter(m=>m.name!==name); appData.medications.evening = appData.medications.evening.filter(m=>m.name!==name); saveData(); renderMedications(); renderCustomMedList(); };
+  function exportData() { const doc = new jspdf.jsPDF(); doc.text("COPD Care Report", 20,20); doc.text(`Name: ${appData.user.name}`,20,40); doc.text(`Doctor: ${appData.pcp.name}`,20,50); doc.save(`COPD-Report-${new Date().toISOString().slice(0,10)}.pdf`); showToast("PDF generated"); }
+  function backupData() { const dataStr = JSON.stringify(appData); const blob = new Blob([dataStr],{type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `copd_backup.json`; a.click(); showToast("Backup saved"); }
+  function resetApp() { if(confirm("Reset all data to demo?")) { localStorage.removeItem('copdCareEnhanced'); location.reload(); } }
+  
+  // Breathing
+  function startBreathing() { startBreathCycle('breathCircle', 'startBreath', 'stop
