@@ -99,11 +99,11 @@
         <h3 data-i18n="todayAssess">📝 Today's Assessment</h3>
         <label data-i18n="mrcLabel">🫁 Dyspnea (MRC Scale)</label>
         <select id="log-mrc">
-          <option value="0">0 - Not breathless</option>
-          <option value="1">1 - Hurrying/hills</option>
-          <option value="2">2 - Walk slower than peers</option>
-          <option value="3">3 - Stop for breath after 100m</option>
-          <option value="4">4 - Too breathless to leave house</option>
+          <option value="0">0 - Not breathless لا توجد صعوبة في التنفس</option>
+          <option value="1">1 - Hurrying/hills التسرع</option>
+          <option value="2">2 - Walk slower than peers امشِ ببطء أكثر من أقرانك</option>
+          <option value="3">3 - Stop for breath after 100m توقف لالتقاط أنفاسك بعد 100 متر</option>
+          <option value="4">4 - Too breathless to leave house لا أستطيع مغادرة المنزل بسبب ضيق التنفس الشديد</option>
         </select>
         
         <label data-i18n="severityLabel">📊 Symptom Severity (1-5)</label>
@@ -145,9 +145,9 @@
       <div class="card">
         <h3 data-i18n="medsPlan">💊 Medication Plan</h3>
         <div class="med-tabs" style="display:flex; gap:8px; margin-bottom:12px;">
-          <button class="btn btn-sm btn-outline" onclick="filterMeds('morning')">🌅 <span data-i18n="morning">Morning</span></button>
-          <button class="btn btn-sm btn-outline" onclick="filterMeds('evening')">🌙 <span data-i18n="evening">Evening</span></button>
-          <button class="btn btn-sm btn-outline" onclick="filterMeds('rescue')">⚡ <span data-i18n="rescue">Rescue</span></button>
+          <button class="btn btn-sm btn-outline" onclick="filterMeds('morning')">🌅 <span data-i18n="morning">Morning صباح</span></button>
+          <button class="btn btn-sm btn-outline" onclick="filterMeds('evening')">🌙 <span data-i18n="evening">Evening مساء</span></button>
+          <button class="btn btn-sm btn-outline" onclick="filterMeds('rescue')">⚡ <span data-i18n="rescue">Rescue إنقاذ</span></button>
         </div>
         <div id="med-list">
           <p class="text-muted" data-i18n="noMeds">No medications added yet.</p>
@@ -197,15 +197,15 @@
       <h3 data-i18n="editMeds">✏️ Edit Medications</h3>
       <button class="btn btn-outline btn-sm" onclick="hideManageMeds()" style="margin-bottom:12px;">← <span data-i18n="backToMeds">Back to Medications</span></button>
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-        <span class="text-muted">🌅 <span data-i18n="morning">Morning</span></span>
-        <span class="text-muted">🌙 <span data-i18n="evening">Evening</span></span>
-        <span class="text-muted">⚡ <span data-i18n="rescue">Rescue (As needed)</span></span>
+        <span class="text-muted">🌅 <span data-i18n="morning">Morning صباح</span></span>
+        <span class="text-muted">🌙 <span data-i18n="evening">Evening مساء</span></span>
+        <span class="text-muted">⚡ <span data-i18n="rescue">Rescue (As needed) إنقاذ</span></span>
       </div>
       <input type="text" id="med-name" placeholder="Medication Name / اسم الدواء">
       <select id="med-time">
-        <option value="morning">Morning</option>
-        <option value="evening">Evening</option>
-        <option value="rescue">Rescue</option>
+        <option value="morning">Morning صباح</option>
+        <option value="evening">Evening مساء</option>
+        <option value="rescue">Rescue إنقاذ</option>
       </select>
       <button class="btn" onclick="addMed()">➕ <span data-i18n="addMed">Add Medication</span></button>
       <h4 style="margin-top:16px;" data-i18n="currentMeds">Current Medications</h4>
