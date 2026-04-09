@@ -3,134 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title data-i18n="appName">COPD Care Companion</title>
+  <title>COPD Care Companion | Breathe Better</title>
   <style>
     :root {
-      --bg: #f8fafc; --surface: #ffffff; --text: #0f172a; --text-muted: #64748b;
+      --bg: #f1f5f9; --surface: #ffffff; --text: #0f172a; --text-muted: #64748b;
       --primary: #0ea5e9; --primary-dark: #0284c7; --success: #22c55e; --warning: #eab308; --danger: #ef4444;
       --border: #e2e8f0; --radius: 12px; --shadow: 0 4px 12px rgba(0,0,0,0.08);
-      --font-main: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
-    .dark {
-      --bg: #0f172a; --surface: #1e293b; --text: #f8fafc; --text-muted: #94a3b8;
-      --border: #334155; --shadow: 0 4px 12px rgba(0,0,0,0.4);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font-main); }
-    body { background: var(--bg); color: var(--text); line-height: 1.5; padding-bottom: 80px; transition: background 0.3s, color 0.3s; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); line-height: 1.5; padding-bottom: 80px; }
     
-    /* Layout & Utilities */
     .container { max-width: 600px; margin: 0 auto; padding: 16px; }
     header { background: var(--surface); padding: 16px; text-align: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
-    header h1 { font-size: 1.4rem; color: var(--primary); }
+    header h1 { font-size: 1.3rem; color: var(--primary); font-weight: 700; }
     .card { background: var(--surface); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow); }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: var(--radius); font-size: 1rem; font-weight: 500; cursor: pointer; width: 100%; transition: 0.2s; }
+    
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--primary); color: white; border: none; padding: 12px 16px; border-radius: var(--radius); font-size: 1rem; font-weight: 500; cursor: pointer; width: 100%; transition: 0.2s; }
     .btn:active { transform: scale(0.98); }
     .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
     .btn-danger { background: var(--danger); }
     .btn-sm { padding: 8px 12px; font-size: 0.9rem; width: auto; }
-    input, select, textarea { width: 100%; padding: 12px; margin: 8px 0 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); font-size: 1rem; }
+    
+    input, select, textarea { width: 100%; padding: 10px; margin: 6px 0 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); font-size: 1rem; }
     label { font-weight: 500; margin-bottom: 4px; display: block; }
     .hidden { display: none !important; }
+    .text-muted { color: var(--text-muted); font-size: 0.9rem; }
     
-    /* Navigation */
-    nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; z-index: 20; }
-    nav button { background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; font-size: 0.85rem; cursor: pointer; }
-    nav button.active { color: var(--primary); font-weight: 600; }
-    nav button svg { width: 24px; height: 24px; }
-
     /* Emergency FAB */
-    #emergency-fab { position: fixed; top: 80px; right: 16px; background: var(--danger); color: white; padding: 12px 16px; border-radius: 50px; font-weight: bold; box-shadow: var(--shadow); cursor: pointer; z-index: 30; display: flex; align-items: center; gap: 8px; border: none; }
+    #emergency-fab { position: fixed; top: 80px; right: 16px; background: var(--danger); color: white; padding: 10px 14px; border-radius: 50px; font-weight: bold; box-shadow: var(--shadow); cursor: pointer; z-index: 30; border: none; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; }
     [dir="rtl"] #emergency-fab { right: auto; left: 16px; }
 
-    /* Breathing Visual */
-    .breath-circle { width: 150px; height: 150px; border-radius: 50%; background: var(--primary); margin: 20px auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; font-weight: bold; transition: transform 0.5s; }
-    .breath-circle.inhale { transform: scale(1.3); }
-    .breath-circle.exhale { transform: scale(0.8); }
+    /* Navigation */
+    nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 20; }
+    nav button { background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px; font-size: 0.8rem; cursor: pointer; flex: 1; }
+    nav button.active { color: var(--primary); font-weight: 600; }
+    nav button svg { width: 22px; height: 22px; fill: currentColor; }
 
-    /* Chart (CSS only) */
-    .chart { display: flex; align-items: flex-end; gap: 8px; height: 120px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    /* Breathing Visual */
+    .breath-circle { width: 140px; height: 140px; border-radius: 50%; background: var(--primary); margin: 20px auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1rem; font-weight: bold; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    .breath-circle.inhale { transform: scale(1.25); }
+    .breath-circle.exhale { transform: scale(0.85); }
+
+    /* Chart */
+    .chart { display: flex; align-items: flex-end; gap: 6px; height: 100px; padding: 8px 0; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
     .chart-bar { flex: 1; background: var(--primary); border-radius: 4px 4px 0 0; min-height: 4px; transition: height 0.3s; position: relative; }
     .chart-bar:hover::after { content: attr(data-val); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: var(--surface); padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; white-space: nowrap; border: 1px solid var(--border); }
+
+    /* Meds List */
+    .med-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .med-item:last-child { border-bottom: none; }
+    .med-check { width: 24px; height: 24px; border: 2px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .med-check.taken { background: var(--success); border-color: var(--success); color: white; }
 
     /* RTL & Logical Properties */
     [dir="rtl"] { text-align: start; }
     .rtl-switch { margin-inline-start: auto; }
     
-    /* Print/Export Optimization */
+    /* Modal */
+    .modal { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); z-index: 40; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .modal-content { background: var(--surface); padding: 20px; border-radius: var(--radius); width: 100%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+
     @media print {
       nav, #emergency-fab, .no-print { display: none !important; }
-      body { padding: 0; background: white; color: black; }
-      .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+      body { padding: 0; background: white; }
+      .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
     }
-
-    /* Action Plan Zones */
-    .zone-indicator { padding: 8px 12px; border-radius: var(--radius); margin-bottom: 12px; font-weight: bold; text-align: center; }
-    .zone-green { background: #dcfce7; color: #166534; border: 1px solid #22c55e; }
-    .zone-yellow { background: #fef9c3; color: #854d0e; border: 1px solid #eab308; }
-    .zone-red { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
   </style>
 </head>
 <body>
   <header>
-    <h1 data-i18n="appName">🫁 COPD Care Companion</h1>
+    <h1 data-i18n="appTitle">COPD Care Companion | Breathe Better</h1>
   </header>
 
-  <button id="emergency-fab" onclick="window.location.href='tel:911'">🚨 <span data-i18n="emergency">Emergency</span></button>
+  <button id="emergency-fab" onclick="window.location.href='tel:911'">🚨 <span data-i18n="emergency">Emergency Help</span></button>
 
   <main id="app-content" class="container">
     <!-- HOME -->
     <section id="tab-home">
       <div class="card">
         <h3 data-i18n="welcome">Welcome!</h3>
-        <p data-i18n="homeDesc">Your daily companion for better breathing and COPD management.</p>
+        <p class="text-muted" data-i18n="homeSubtitle">Your daily companion for better breathing and COPD management.</p>
       </div>
-      <div class="card" id="action-plan">
-        <h3 data-i18n="actionPlan">COPD Action Plan</h3>
-        <div id="zone-display" class="zone-indicator zone-green" data-i18n="zoneGreen">✅ Green Zone: All clear</div>
-        <p class="text-muted" data-i18n="zoneTip">Keep logging symptoms & peak flow to track your zone.</p>
+      <div class="card" id="streak-card">
+        <h4>🔥 <span data-i18n="streak">3 day streak</span></h4>
       </div>
       <div class="card">
-        <h3 data-i18n="aqTitle">🌤️ Air Quality & Tips</h3>
-        <p data-i18n="aqText">Check local AQI before outdoor activities. Avoid smoke, dust, and extreme temperatures.</p>
-      </div>
-      <div class="card">
-        <h3 data-i18n="hydration">💧 Hydration & Rest</h3>
-        <label><input type="checkbox" id="hydration-toggle" onchange="toggleSetting('hydration')"> <span data-i18n="hydrationReminder">Daily reminder for fluids & rest</span></label>
-      </div>
-    </section>
-
-    <!-- MEDS -->
-    <section id="tab-meds" class="hidden">
-      <div class="card">
-        <h3 data-i18n="medsPlan">💊 Medication Plan</h3>
-        <div id="med-list">
-          <p data-i18n="noMeds" class="text-muted">No medications added yet.</p>
-        </div>
-        <button class="btn btn-outline btn-sm" onclick="addMed()" data-i18n="addMed">➕ Add Medication</button>
-      </div>
-      <div class="card">
-        <h3 data-i18n="inhalerTech">🌬️ Inhaler Technique Quick Guide</h3>
-        <ul style="margin-inline-start: 20px; line-height: 1.8;">
-          <li data-i18n="mdiTip">MDI: Shake 5s → Breathe out → Seal lips → Press & inhale slowly → Hold 10s</li>
-          <li data-i18n="dpiTip">DPI: Breathe out → Seal lips → Inhale DEEPLY → Hold 10s</li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- BREATHE -->
-    <section id="tab-breathe" class="hidden">
-      <div class="card">
-        <h3 data-i18n="guidedBreathe">🧘 Guided Breathing</h3>
-        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
-          <button class="btn btn-outline btn-sm" onclick="setBreath('pursed')" data-i18n="pursed">Pursed-Lip (4-4)</button>
-          <button class="btn btn-outline btn-sm" onclick="setBreath('box')" data-i18n="box">Box (4-4-4-4)</button>
-          <button class="btn btn-outline btn-sm" onclick="setBreath('478')" data-i18n="relax478">4-7-8 Relax</button>
-        </div>
-        <div id="breath-circle" class="breath-circle">Ready</div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn" id="start-btn" onclick="startBreath()">▶️ <span data-i18n="start">Start</span></button>
-          <button class="btn btn-outline" onclick="stopBreath()">⏹️ <span data-i18n="stop">Stop</span></button>
-        </div>
+        <h4 data-i18n="aqTitle">🌤️ Air Quality Guide</h4>
+        <p class="text-muted" data-i18n="aqDesc">Check local AQI before outdoor activities. Avoid smoke, dust, and extreme temperatures.</p>
       </div>
     </section>
 
@@ -138,7 +97,7 @@
     <section id="tab-log" class="hidden">
       <div class="card">
         <h3 data-i18n="todayAssess">📝 Today's Assessment</h3>
-        <label data-i18n="mrcLabel">Dyspnea (MRC Scale)</label>
+        <label data-i18n="mrcLabel">🫁 Dyspnea (MRC Scale)</label>
         <select id="log-mrc">
           <option value="0">0 - Not breathless</option>
           <option value="1">1 - Hurrying/hills</option>
@@ -147,12 +106,9 @@
           <option value="4">4 - Too breathless to leave house</option>
         </select>
         
-        <label data-i18n="severityLabel">Symptom Severity (1-5)</label>
-        <input type="range" id="log-severity" min="1" max="5" value="2" oninput="updateZone()">
-        <span id="severity-val">2</span>
-        
-        <label data-i18n="peakFlowLabel">Peak Flow (L/min)</label>
-        <input type="number" id="log-peak" placeholder="e.g. 350">
+        <label data-i18n="severityLabel">📊 Symptom Severity (1-5)</label>
+        <input type="range" id="log-severity" min="1" max="5" value="2">
+        <span id="severity-val" class="text-muted">2</span>
         
         <label><input type="checkbox" id="log-warn"> <span data-i18n="warnSign">⚠️ Warning Signs (Increased cough, colored sputum, fever)</span></label>
         
@@ -160,96 +116,185 @@
       </div>
       
       <div class="card">
-        <h3 data-i18n="peakTrend">📊 Peak Flow Trend</h3>
+        <h3 data-i18n="peakTitle">📊 Peak Flow Trend</h3>
         <div id="chart" class="chart"></div>
+        <button class="btn btn-outline btn-sm" onclick="addPeakReading()">➕ <span data-i18n="recordReading">Record Reading</span></button>
+      </div>
+    </section>
+
+    <!-- BREATHE -->
+    <section id="tab-breathe" class="hidden">
+      <div class="card">
+        <h3 data-i18n="guidedBreathe">🧘 Guided Breathing</h3>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+          <button class="btn btn-outline btn-sm" onclick="setBreath('pursed')" data-i18n="pursed">Pursed Lip (4-4)</button>
+          <button class="btn btn-outline btn-sm" onclick="setBreath('box')" data-i18n="box">Box (4-4-4-4)</button>
+          <button class="btn btn-outline btn-sm" onclick="setBreath('478')" data-i18n="relax478">4-7-8 Relax</button>
+        </div>
+        <div id="breath-circle" class="breath-circle">Ready</div>
+        <p class="text-muted" style="text-align:center;" id="breath-tip" data-i18n="pursedTip">💡 Pursed-lip: inhale 4s, exhale 4s</p>
+        <div style="display:flex; gap:8px;">
+          <button class="btn" id="start-btn" onclick="startBreath()">▶️ <span data-i18n="start">Start</span></button>
+          <button class="btn btn-outline" onclick="stopBreath()">⏹️ <span data-i18n="stop">Stop</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEDS -->
+    <section id="tab-meds" class="hidden">
+      <div class="card">
+        <h3 data-i18n="medsPlan">💊 Medication Plan</h3>
+        <div class="med-tabs" style="display:flex; gap:8px; margin-bottom:12px;">
+          <button class="btn btn-sm btn-outline" onclick="filterMeds('morning')">🌅 <span data-i18n="morning">Morning</span></button>
+          <button class="btn btn-sm btn-outline" onclick="filterMeds('evening')">🌙 <span data-i18n="evening">Evening</span></button>
+          <button class="btn btn-sm btn-outline" onclick="filterMeds('rescue')">⚡ <span data-i18n="rescue">Rescue</span></button>
+        </div>
+        <div id="med-list">
+          <p class="text-muted" data-i18n="noMeds">No medications added yet.</p>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="showManageMeds()" style="margin-top:10px;">✏️ <span data-i18n="manageMeds">Manage Medications</span></button>
+      </div>
+      <div class="card">
+        <h3 data-i18n="inhalerTech">🌬️ Inhaler Technique</h3>
+        <ul style="margin-inline-start: 20px; line-height: 1.8;">
+          <li data-i18n="mdiTip">✅ MDI: Shake 5s, breathe out, inhale slowly & press, hold 10s.</li>
+          <li data-i18n="dpiTip">✅ DPI: Breathe out, seal lips, inhale DEEPLY, hold breath.</li>
+        </ul>
       </div>
     </section>
 
     <!-- PROFILE -->
     <section id="tab-profile" class="hidden">
       <div class="card">
-        <h3 data-i18n="profileTitle">👤 Profile & Settings</h3>
+        <h3 data-i18n="profileTitle">👤 Profile & PCP Info</h3>
+        <label><input type="checkbox" id="refill-toggle"> <span data-i18n="refillAlert">🔄 Refill Alerts</span></label>
+        <button class="btn btn-outline" onclick="exportPDF()" style="margin-top:8px;">📤 <span data-i18n="exportPDF">Export PDF</span></button>
+        <button class="btn btn-outline" onclick="backupData()" style="margin-top:8px;">💾 <span data-i18n="backup">Backup</span></button>
+        <button class="btn btn-outline" onclick="showGuide()" style="margin-top:8px;">📖 <span data-i18n="userGuide">Show User Guide Again</span></button>
         
-        <label data-i18n="langLabel">🌐 Language / اللغة</label>
-        <select id="lang-select" onchange="switchLang(this.value)">
+        <label style="margin-top:16px;" data-i18n="langLabel">🌐 Language / اللغة</label>
+        <select id="lang-select" onchange="switchLanguage(this.value)">
           <option value="en">English</option>
           <option value="ar">العربية</option>
         </select>
         
-        <label><input type="checkbox" id="theme-toggle" onchange="toggleTheme()"> <span data-i18n="darkMode">🌙 Dark Mode</span></label>
-        
-        <button class="btn btn-outline" onclick="exportData()">📤 <span data-i18n="export">Export/Print Report</span></button>
-        <button class="btn btn-outline" onclick="backupData()">💾 <span data-i18n="backup">Backup & Restore</span></button>
-        <button class="btn btn-danger" onclick="resetData()" style="margin-top:8px;">🔄 <span data-i18n="reset">Reset Demo Data</span></button>
+        <button class="btn btn-danger" onclick="resetData()" style="margin-top:12px;">🔄 <span data-i18n="resetData">Reset Demo Data</span></button>
       </div>
     </section>
   </main>
 
   <nav id="bottom-nav">
     <button class="active" onclick="switchTab('tab-home', this)">🏠 <span data-i18n="home">Home</span></button>
-    <button onclick="switchTab('tab-meds', this)">💊 <span data-i18n="meds">Meds</span></button>
-    <button onclick="switchTab('tab-breathe', this)">🌬️ <span data-i18n="breathe">Breathe</span></button>
     <button onclick="switchTab('tab-log', this)">📋 <span data-i18n="log">Log</span></button>
+    <button onclick="switchTab('tab-breathe', this)">🌬️ <span data-i18n="breathe">Breathe</span></button>
+    <button onclick="switchTab('tab-meds', this)">💊 <span data-i18n="meds">Meds</span></button>
     <button onclick="switchTab('tab-profile', this)">👤 <span data-i18n="profile">Profile</span></button>
   </nav>
+
+  <!-- Manage Meds Modal -->
+  <div id="med-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3 data-i18n="editMeds">✏️ Edit Medications</h3>
+      <button class="btn btn-outline btn-sm" onclick="hideManageMeds()" style="margin-bottom:12px;">← <span data-i18n="backToMeds">Back to Medications</span></button>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+        <span class="text-muted">🌅 <span data-i18n="morning">Morning</span></span>
+        <span class="text-muted">🌙 <span data-i18n="evening">Evening</span></span>
+        <span class="text-muted">⚡ <span data-i18n="rescue">Rescue (As needed)</span></span>
+      </div>
+      <input type="text" id="med-name" placeholder="Medication Name / اسم الدواء">
+      <select id="med-time">
+        <option value="morning">Morning</option>
+        <option value="evening">Evening</option>
+        <option value="rescue">Rescue</option>
+      </select>
+      <button class="btn" onclick="addMed()">➕ <span data-i18n="addMed">Add Medication</span></button>
+      <h4 style="margin-top:16px;" data-i18n="currentMeds">Current Medications</h4>
+      <div id="modal-med-list"></div>
+    </div>
+  </div>
+
+  <!-- Guide Modal -->
+  <div id="guide-modal" class="modal hidden">
+    <div class="modal-content">
+      <h3 data-i18n="appFeaturesTitle">⭐ App Features</h3>
+      <ul style="margin-inline-start: 20px; line-height: 1.6;">
+        <li data-i18n="feat1">📋 Daily Health Tracking – Log MRC score, symptoms, and warning signs</li>
+        <li data-i18n="feat2">💊 Medication Manager – Add/edit meds, track taken doses, refill reminders</li>
+        <li data-i18n="feat3">🌬️ Breathing Exercises – Guided pursed-lip, box breathing, 4-7-8 technique</li>
+        <li data-i18n="feat4">📊 Peak Flow Monitoring – Record and visualize lung function trends</li>
+        <li data-i18n="feat5">👨‍⚕️ Editable PCP & Emergency Info – Keep doctor contacts handy</li>
+        <li data-i18n="feat6">📤 Export PDF Reports – Share health summary with your care team</li>
+        <li data-i18n="feat7">🔔 Refill Alerts – Get notified when medications run low</li>
+        <li data-i18n="feat8">🌤️ Air Quality Guide – COPD-friendly outdoor recommendations</li>
+        <li data-i18n="feat9">🚨 Emergency Action – One-tap access to 911 and symptom checklist</li>
+        <li data-i18n="feat10">💾 Backup & Restore – Local data export/import for safety</li>
+      </ul>
+      <button class="btn btn-outline" onclick="hideGuide()" style="margin-top:12px;">← <span data-i18n="backToProfile">Back to Profile</span></button>
+    </div>
+  </div>
 
   <script>
     // --- i18n Dictionary ---
     const i18n = {
       en: {
-        appName: "🫁 COPD Care Companion", home: "Home", meds: "Meds", breathe: "Breathe", log: "Log", profile: "Profile",
-        emergency: "Emergency", welcome: "Welcome!", homeDesc: "Your daily companion for better breathing and COPD management.",
-        actionPlan: "COPD Action Plan", zoneGreen: "✅ Green Zone: All clear", zoneYellow: "⚠️ Yellow Zone: Caution", zoneRed: "🚨 Red Zone: Medical help needed",
-        zoneTip: "Keep logging symptoms & peak flow to track your zone.", aqTitle: "🌤️ Air Quality & Tips", aqText: "Check local AQI before outdoor activities. Avoid smoke, dust, and extreme temperatures.",
-        hydration: "💧 Hydration & Rest", hydrationReminder: "Daily reminder for fluids & rest",
-        medsPlan: "💊 Medication Plan", noMeds: "No medications added yet.", addMed: "➕ Add Medication", inhalerTech: "🌬️ Inhaler Technique Quick Guide",
-        mdiTip: "MDI: Shake 5s → Breathe out → Seal lips → Press & inhale slowly → Hold 10s", dpiTip: "DPI: Breathe out → Seal lips → Inhale DEEPLY → Hold 10s",
-        guidedBreathe: "🧘 Guided Breathing", pursed: "Pursed-Lip (4-4)", box: "Box (4-4-4-4)", relax478: "4-7-8 Relax", start: "Start", stop: "Stop",
-        todayAssess: "📝 Today's Assessment", mrcLabel: "Dyspnea (MRC Scale)", severityLabel: "Symptom Severity (1-5)", peakFlowLabel: "Peak Flow (L/min)",
-        warnSign: "⚠️ Warning Signs (Increased cough, colored sputum, fever)", saveToday: "Save Today", peakTrend: "📊 Peak Flow Trend",
-        profileTitle: "👤 Profile & Settings", langLabel: "🌐 Language / اللغة", darkMode: "🌙 Dark Mode", export: "Export/Print Report", backup: "Backup & Restore", reset: "Reset Demo Data"
+        appTitle: "COPD Care Companion | Breathe Better", emergency: "Emergency Help", welcome: "Welcome!", homeSubtitle: "Your daily companion for better breathing and COPD management.",
+        streak: "3 day streak", aqTitle: "🌤️ Air Quality Guide", aqDesc: "Check local AQI before outdoor activities. Avoid smoke, dust, and extreme temperatures.",
+        todayAssess: "📝 Today's Assessment", mrcLabel: "🫁 Dyspnea (MRC Scale)", severityLabel: "📊 Symptom Severity (1-5)", warnSign: "⚠️ Warning Signs (Increased cough, colored sputum, fever)",
+        saveToday: "Save Today", peakTitle: "📊 Peak Flow Trend", recordReading: "Record Reading", guidedBreathe: "🧘 Guided Breathing", pursed: "Pursed Lip (4-4)", box: "Box (4-4-4-4)", relax478: "4-7-8 Relax",
+        pursedTip: "💡 Pursed-lip: inhale 4s, exhale 4s", boxTip: "💡 Box: inhale 4s, hold 4s, exhale 4s, hold 4s", relax478Tip: "💡 4-7-8: inhale 4s, hold 7s, exhale 8s", start: "Start", stop: "Stop",
+        medsPlan: "💊 Medication Plan", morning: "Morning", evening: "Evening", rescue: "Rescue", noMeds: "No medications added yet.", manageMeds: "Manage Medications", inhalerTech: "🌬️ Inhaler Technique",
+        mdiTip: "✅ MDI: Shake 5s, breathe out, inhale slowly & press, hold 10s.", dpiTip: "✅ DPI: Breathe out, seal lips, inhale DEEPLY, hold breath.", profileTitle: "👤 Profile & PCP Info", refillAlert: "🔄 Refill Alerts",
+        exportPDF: "Export PDF", backup: "Backup", userGuide: "Show User Guide Again", langLabel: "🌐 Language / اللغة", resetData: "Reset Demo Data", home: "Home", log: "Log", breathe: "Breathe", meds: "Meds", profile: "Profile",
+        editMeds: "✏️ Edit Medications", backToMeds: "← Back to Medications", addMed: "Add Medication", currentMeds: "Current Medications", appFeaturesTitle: "⭐ App Features",
+        feat1: "📋 Daily Health Tracking – Log MRC score, symptoms, and warning signs", feat2: "💊 Medication Manager – Add/edit meds, track taken doses, refill reminders", feat3: "🌬️ Breathing Exercises – Guided pursed-lip, box breathing, 4-7-8 technique",
+        feat4: "📊 Peak Flow Monitoring – Record and visualize lung function trends", feat5: "👨‍⚕️ Editable PCP & Emergency Info – Keep doctor contacts handy", feat6: "📤 Export PDF Reports – Share health summary with your care team",
+        feat7: "🔔 Refill Alerts – Get notified when medications run low", feat8: "🌤️ Air Quality Guide – COPD-friendly outdoor recommendations", feat9: "🚨 Emergency Action – One-tap access to 911 and symptom checklist",
+        feat10: "💾 Backup & Restore – Local data export/import for safety", backToProfile: "← Back to Profile"
       },
       ar: {
-        appName: "🫁 رفيق رعاية مرضى الانسداد الرئوي", home: "الرئيسية", meds: "الأدوية", breathe: "التنفس", log: "السجل", profile: "الملف الشخصي",
-        emergency: "مساعدة طارئة", welcome: "مرحباً بك!", homeDesc: "رفيقك اليومي لتحسين التنفس وإدارة مرض الانسداد الرئوي المزمن.",
-        actionPlan: "خطة العمل لمرض الانسداد الرئوي", zoneGreen: "✅ المنطقة الخضراء: الوضع مستقر", zoneYellow: "⚠️ المنطقة الصفراء: احذر", zoneRed: "🚨 المنطقة الحمراء: اطلب المساعدة الطبية فوراً",
-        zoneTip: "استمر بتسجيل الأعراض وقمة التدفق لمتابعة منطقتك.", aqTitle: "🌤️ جودة الهواء والنصائح", aqText: "تحقق من مؤشر جودة الهواء قبل الخروج. تجنب الدخان والغبار ودرجات الحرارة المتطرفة.",
-        hydration: "💧 الترطيب والراحة", hydrationReminder: "تذكير يومي بشرب السوائل وأخذ قسط من الراحة",
-        medsPlan: "💊 خطة الأدوية", noMeds: "لم تتم إضافة أي أدوية بعد.", addMed: "➕ إضافة دواء", inhalerTech: "🌬️ دليل سريع لاستخدام البخاخ",
-        mdiTip: "بخاخ جرعات مقننة: رج 5 ثوانٍ → زفر → أطبق الشفاه → اضغط واستنشق ببطء → احبس النفس 10 ثوانٍ", dpiTip: "بخاخ بودرة جافة: زفر → أطبق الشفاه → استنشق بعمق → احبس النفس 10 ثوانٍ",
-        guidedBreathe: "🧘 تمارين التنفس الموجهة", pursed: "شفاه مزمومة (4-4)", box: "صندوق (4-4-4-4)", relax478: "استرخاء 4-7-8", start: "ابدأ", stop: "أوقف",
-        todayAssess: "📝 التقييم اليومي", mrcLabel: "ضيق التنفس (مقياس MRC)", severityLabel: "شدة الأعراض (1-5)", peakFlowLabel: "قمة تدفق الهواء (لتر/دقيقة)",
-        warnSign: "⚠️ علامات التحذير (زيادة السعال، بلغم ملون، حمى)", saveToday: "حفظ اليوم", peakTrend: "📊 اتجاه قمة التدفق",
-        profileTitle: "👤 الملف الشخصي والإعدادات", langLabel: "🌐 اللغة / Language", darkMode: "🌙 الوضع الداكن", export: "تصدير/طباعة التقرير", backup: "نسخ احتياطي واستعادة", reset: "إعادة تعيين البيانات التجريبية"
+        appTitle: "رفيق رعاية مرضى الانسداد الرئوي | تنفس بشكل أفضل", emergency: "مساعدة طارئة", welcome: "مرحباً بك!", homeSubtitle: "رفيقك اليومي لتحسين التنفس وإدارة مرض الانسداد الرئوي المزمن.",
+        streak: "🔥 3 أيام متتالية", aqTitle: "🌤️ دليل جودة الهواء", aqDesc: "تحقق من مؤشر جودة الهواء المحلي قبل الأنشطة الخارجية. تجنب الدخان والغبار ودرجات الحرارة المتطرفة.",
+        todayAssess: "📝 التقييم اليومي", mrcLabel: "🫁 ضيق التنفس (مقياس MRC)", severityLabel: "📊 شدة الأعراض (1-5)", warnSign: "⚠️ علامات التحذير (زيادة السعال، بلغم ملون، حمى)",
+        saveToday: "حفظ اليوم", peakTitle: "📊 اتجاه ذروة التدفق", recordReading: "تسجيل القراءة", guidedBreathe: "🧘 تمارين التنفس الموجهة", pursed: "الشفاه المزمومة (4-4)", box: "صندوق التنفس (4-4-4-4)", relax478: "استرخاء 4-7-8",
+        pursedTip: "💡 شفاه مزمومة: شهيق 4 ثوانٍ، زفير 4 ثوانٍ", boxTip: "💡 صندوق: شهيق 4، حبس 4، زفير 4، حبس 4", relax478Tip: "💡 4-7-8: شهيق 4، حبس 7، زفير 8", start: "ابدأ", stop: "أوقف",
+        medsPlan: "💊 خطة الأدوية", morning: "الصباح", evening: "المساء", rescue: "عند الحاجة", noMeds: "لم تتم إضافة أدوية بعد.", manageMeds: "إدارة الأدوية", inhalerTech: "🌬️ تقنية البخاخ",
+        mdiTip: "✅ جرعات مقننة (MDI): رج 5 ثوانٍ، زفر، استنشق ببطء واضغط، احبس 10 ثوانٍ.", dpiTip: "✅ بودرة جافة (DPI): زفر، أطبق الشفاه، استنشق بعمق، احبس النفس.", profileTitle: "👤 الملف الشخصي وطبيبك", refillAlert: "🔄 تنبيهات إعادة التعبئة",
+        exportPDF: "تصدير PDF", backup: "نسخ احتياطي", userGuide: "عرض دليل المستخدم مرة أخرى", langLabel: "🌐 اللغة / Language", resetData: "إعادة تعيين البيانات", home: "الرئيسية", log: "السجل", breathe: "التنفس", meds: "الأدوية", profile: "الملف الشخصي",
+        editMeds: "✏️ تعديل الأدوية", backToMeds: "← العودة للأدوية", addMed: "إضافة دواء", currentMeds: "الأدوية الحالية", appFeaturesTitle: "⭐ ميزات التطبيق",
+        feat1: "📋 تتبع الصحة اليومي – تسجيل درجة MRC والأعراض وعلامات التحذير", feat2: "💊 مدير الأدوية – إضافة/تعديل الأدوية، تتبع الجرعات، تنبيهات إعادة التعبئة", feat3: "🌬️ تمارين التنفس – تمارين موجهة للشفاه المزمومة، والصندوق، و4-7-8",
+        feat4: "📊 مراقبة ذروة التدفق – تسجيل وعرض اتجاهات وظيفة الرئة", feat5: "👨‍⚕️ معلومات الطبيب والطوارئ – الاحتفاظ بجهات اتصال الأطباء في متناول اليد", feat6: "📤 تصدير تقارير PDF – مشاركة الملخص الصحي مع فريق الرعاية",
+        feat7: "🔔 تنبيهات إعادة التعبئة – إشعار عند قرب نفاد الأدوية", feat8: "🌤️ دليل جودة الهواء – توصيات للأنشطة الخارجية المناسبة لمرضى الانسداد الرئوي", feat9: "🚨 إجراء الطوارئ – وصول سريع للرقم 911 وقائمة فحص الأعراض",
+        feat10: "💾 النسخ الاحتياطي والاستعادة – تصدير/استيراد البيانات محلياً للأمان", backToProfile: "← العودة للملف الشخصي"
       }
     };
 
     // --- State & Storage ---
-    let state = { lang: 'en', theme: 'light', logs: [], meds: [], breathType: 'pursed', running: false, interval: null };
+    let state = { lang: 'en', logs: [], meds: [], peaks: [], breathType: 'pursed', running: false, interval: null };
     const saveState = () => localStorage.setItem('copd_state', JSON.stringify(state));
     const loadState = () => {
       const saved = localStorage.getItem('copd_state');
       if (saved) state = { ...state, ...JSON.parse(saved) };
       document.getElementById('lang-select').value = state.lang;
-      document.getElementById('theme-toggle').checked = state.theme === 'dark';
-      applyLang(); applyTheme(); renderMeds(); renderChart();
+      applyLanguage(state.lang);
+      renderMeds(); renderChart();
     };
 
-    // --- i18n & UI ---
-    const applyLang = () => {
-      document.documentElement.lang = state.lang;
-      document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
+    // --- Language Engine ---
+    const applyLanguage = (lang) => {
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (i18n[state.lang][key]) el.textContent = i18n[state.lang][key];
+        if (i18n[lang][key]) el.textContent = i18n[lang][key];
       });
+      // Update dynamic tips if needed
+      if (lang === 'ar') {
+        document.getElementById('breath-tip').textContent = i18n.ar.pursedTip;
+      } else {
+        document.getElementById('breath-tip').textContent = i18n.en.pursedTip;
+      }
     };
-    const switchLang = (lang) => { state.lang = lang; saveState(); applyLang(); };
-
-    const applyTheme = () => {
-      document.body.classList.toggle('dark', state.theme === 'dark');
-    };
-    const toggleTheme = () => { state.theme = document.getElementById('theme-toggle').checked ? 'dark' : 'light'; saveState(); applyTheme(); };
+    const switchLanguage = (lang) => { state.lang = lang; saveState(); applyLanguage(lang); };
 
     // --- Navigation ---
     const switchTab = (id, btn) => {
@@ -262,7 +307,12 @@
 
     // --- Breathing ---
     const breathConfigs = { pursed: [4,4], box: [4,4,4,4], '478': [4,7,8] };
-    const setBreath = (type) => { state.breathType = type; };
+    const breathTips = { en: {pursed: "💡 Pursed-lip: inhale 4s, exhale 4s", box: "💡 Box: inhale 4s, hold 4s, exhale 4s, hold 4s", '478': "💡 4-7-8: inhale 4s, hold 7s, exhale 8s"},
+                         ar: {pursed: "💡 شفاه مزمومة: شهيق 4 ثوانٍ، زفير 4 ثوانٍ", box: "💡 صندوق: شهيق 4، حبس 4، زفير 4، حبس 4", '478': "💡 4-7-8: شهيق 4، حبس 7، زفير 8"} };
+    const setBreath = (type) => { 
+      state.breathType = type; 
+      document.getElementById('breath-tip').textContent = breathTips[state.lang][type]; 
+    };
     const startBreath = () => {
       if (state.running) return;
       state.running = true;
@@ -273,9 +323,9 @@
       const run = () => {
         if (!state.running) return;
         const duration = config[step % config.length] * 1000;
-        const action = (step % 2 === 0) ? 'inhale' : 'exhale';
-        circle.textContent = action === 'inhale' ? 'Inhale' : 'Exhale';
-        circle.className = `breath-circle ${action}`;
+        const action = (step % 2 === 0) ? (state.lang==='ar'?'شهيق':'Inhale') : (state.lang==='ar'?'زفير':'Exhale');
+        circle.textContent = action;
+        circle.className = `breath-circle ${action === (state.lang==='ar'?'شهيق':'Inhale') ? 'inhale' : 'exhale'}`;
         step++;
         state.interval = setTimeout(run, duration);
       };
@@ -289,88 +339,89 @@
       document.getElementById('start-btn').classList.remove('hidden');
     };
 
-    // --- Logging & Action Plan ---
-    const updateZone = () => {
-      const sev = document.getElementById('log-severity').value;
-      document.getElementById('severity-val').textContent = sev;
-      const display = document.getElementById('zone-display');
-      if (sev >= 4) { display.className = 'zone-indicator zone-red'; display.textContent = i18n[state.lang].zoneRed; }
-      else if (sev >= 2) { display.className = 'zone-indicator zone-yellow'; display.textContent = i18n[state.lang].zoneYellow; }
-      else { display.className = 'zone-indicator zone-green'; display.textContent = i18n[state.lang].zoneGreen; }
-    };
+    // --- Logging & Chart ---
+    document.getElementById('log-severity').addEventListener('input', e => document.getElementById('severity-val').textContent = e.target.value);
     const saveLog = () => {
-      const log = {
+      state.logs.push({
         date: new Date().toISOString().split('T')[0],
         mrc: document.getElementById('log-mrc').value,
         severity: document.getElementById('log-severity').value,
-        peak: document.getElementById('log-peak').value || 0,
         warning: document.getElementById('log-warn').checked
-      };
-      state.logs.push(log);
-      if (state.logs.length > 14) state.logs.shift(); // Keep 2 weeks
+      });
       saveState();
-      renderChart();
-      alert('Log saved! / تم الحفظ!');
+      alert(state.lang==='en' ? 'Log saved!' : 'تم الحفظ!');
+    };
+    const addPeakReading = () => {
+      const val = prompt(state.lang==='en' ? 'Peak Flow (L/min):' : 'ذروة التدفق (لتر/دقيقة):');
+      if (val && !isNaN(val)) {
+        state.peaks.push(val);
+        if (state.peaks.length > 7) state.peaks.shift();
+        saveState(); renderChart();
+      }
     };
     const renderChart = () => {
       const chart = document.getElementById('chart');
       chart.innerHTML = '';
-      if (state.logs.length === 0) return chart.innerHTML = '<p style="width:100%; text-align:center; color:var(--text-muted)">No data / لا توجد بيانات</p>';
-      const max = Math.max(...state.logs.map(l => l.peak), 1);
-      state.logs.slice(-7).forEach(l => {
-        const h = Math.max((l.peak / max) * 100, 5);
+      if (state.peaks.length === 0) { chart.innerHTML = `<p class="text-muted" style="width:100%; text-align:center">${state.lang==='en'?'No data':'لا توجد بيانات'}</p>`; return; }
+      const max = Math.max(...state.peaks, 1);
+      state.peaks.forEach(p => {
         const bar = document.createElement('div');
         bar.className = 'chart-bar';
-        bar.style.height = `${h}%`;
-        bar.setAttribute('data-val', `${l.peak} L/min`);
+        bar.style.height = `${(p/max)*100}%`;
+        bar.setAttribute('data-val', `${p} L/min`);
         chart.appendChild(bar);
       });
     };
 
     // --- Meds ---
+    const showManageMeds = () => document.getElementById('med-modal').classList.remove('hidden');
+    const hideManageMeds = () => document.getElementById('med-modal').classList.add('hidden');
     const addMed = () => {
-      const name = prompt('Medication Name / اسم الدواء:');
+      const name = document.getElementById('med-name').value.trim();
+      const time = document.getElementById('med-time').value;
       if (!name) return;
-      const time = prompt('Time (Morning/Evening/Rescue) / الوقت (صباح/مساء/عند الحاجة):', 'Morning');
       state.meds.push({ id: Date.now(), name, time, taken: false });
-      saveState(); renderMeds();
+      document.getElementById('med-name').value = '';
+      saveState(); renderMeds(); renderModalMeds();
     };
-    const renderMeds = () => {
+    const renderMeds = (filter = null) => {
       const list = document.getElementById('med-list');
       list.innerHTML = '';
-      if (state.meds.length === 0) { list.innerHTML = `<p data-i18n="noMeds">${i18n[state.lang].noMeds}</p>`; return; }
-      state.meds.forEach(m => {
-        const div = document.createElement('div');
-        div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border)';
-        div.innerHTML = `<span>${m.name} <small>(${m.time})</small></span> <button class="btn btn-sm" onclick="toggleMed(${m.id})">${m.taken ? '✅' : '⬜'}</button>`;
-        list.appendChild(div);
+      const filtered = filter ? state.meds.filter(m => m.time === filter) : state.meds;
+      if (filtered.length === 0) { list.innerHTML = `<p class="text-muted">${i18n[state.lang].noMeds}</p>`; return; }
+      filtered.forEach(m => {
+        list.innerHTML += `<div class="med-item"><span>${m.name} <small>(${m.time})</small></span><div class="med-check ${m.taken?'taken':''}" onclick="toggleMed(${m.id})">${m.taken?'✓':''}</div></div>`;
       });
     };
+    const renderModalMeds = () => {
+      const list = document.getElementById('modal-med-list');
+      list.innerHTML = state.meds.length === 0 ? `<p class="text-muted">${i18n[state.lang].noMeds}</p>` : 
+        state.meds.map(m => `<div class="med-item"><span>${m.name}</span><button class="btn btn-sm btn-danger" onclick="deleteMed(${m.id})">❌</button></div>`).join('');
+    };
+    const deleteMed = (id) => { state.meds = state.meds.filter(m => m.id !== id); saveState(); renderMeds(); renderModalMeds(); };
     const toggleMed = (id) => {
       const med = state.meds.find(m => m.id === id);
       if (med) { med.taken = !med.taken; saveState(); renderMeds(); }
     };
+    const filterMeds = (type) => renderMeds(type);
 
-    // --- Data Management ---
-    const exportData = () => window.print();
+    // --- Profile & Data ---
+    const exportPDF = () => window.print();
     const backupData = () => {
       const blob = new Blob([JSON.stringify(state)], {type: 'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'copd_backup.json'; a.click();
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'copd_backup.json'; a.click();
     };
     const resetData = () => {
-      if(confirm('Reset all data? / إعادة تعيين جميع البيانات؟')) {
+      if(confirm(state.lang==='en'?'Reset all data?':'إعادة تعيين جميع البيانات؟')) {
         localStorage.removeItem('copd_state');
         location.reload();
       }
     };
-    const toggleSetting = (key) => { /* Placeholder for future notification logic */ };
+    const showGuide = () => document.getElementById('guide-modal').classList.remove('hidden');
+    const hideGuide = () => document.getElementById('guide-modal').classList.add('hidden');
 
     // --- Init ---
-    window.addEventListener('DOMContentLoaded', () => {
-      loadState();
-      document.getElementById('log-severity').addEventListener('input', updateZone);
-    });
+    window.addEventListener('DOMContentLoaded', loadState);
   </script>
 </body>
 </html>
